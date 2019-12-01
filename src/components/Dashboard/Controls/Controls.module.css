@@ -1,0 +1,33 @@
+.controls {
+  background-color: #052b55;
+  height: 150px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  width: 185px;
+  height: 40px;
+  background-color: #3783ff;
+  border-radius: 5%;
+  margin: 0 10px 0 10px;
+  font-size: 16px;
+  letter-spacing: 0px;
+  color: #f2efec;
+  font-family: 'Roboto';
+  font-weight: 700;
+}
+
+input {
+  width: 260px;
+  height: 40px;
+  border-radius: 5%;
+  margin: 0 10px 0 10px;
+  font-size: 16px;
+  letter-spacing: 0px;
+  color: #5c6975;
+  font-family: 'Roboto';
+  font-weight: 700;
+}
