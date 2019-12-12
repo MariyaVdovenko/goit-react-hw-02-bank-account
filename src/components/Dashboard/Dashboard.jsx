@@ -16,6 +16,7 @@ import React, { Component } from 'react';
 import Controls from './Controls/Controls';
 import Balance from './Balance/Balance';
 import TransactionHistory from './TransactionHistory/TransactionHistory';
+import shortId from 'shortid';
 
 export default class Dashboard extends Component {
   static defaultProps = {};
@@ -23,18 +24,82 @@ export default class Dashboard extends Component {
   static propTypes = {};
 
   state = {
-    transactions: 0,
+    transactions: [],
+    transactionType: '',
     balance: 0,
+    amount: '',
+    income: '',
+
+    expenses: '',
+  };
+  handleChange = e => {
+    this.setState({ amount: e.target.value });
+  };
+  onWithdraw = e => {
+    if (this.state.amount <= 0) {
+      alert('Введите сумму для проведения операции!');
+      return;
+    }
+    if (this.state.amount > this.state.balance) {
+      alert('На счету недостаточно средств для проведения операции!');
+      return;
+    }
+    this.setState({
+      balance: Number(this.state.balance) - Number(this.state.amount),
+      transactionType: e.currentTarget.name,
+      amount: '',
+    });
+    this.setState(prevState => ({
+      expenses: (Number(prevState.expenses) - Number(this.state.amount)) * -1,
+    }));
+    this.saveTransaction(this.state.amount, this.state.transactionType);
+  };
+  onDeposit = e => {
+    if (this.state.amount <= 0) {
+      alert('Введите сумму для проведения операции!');
+      return;
+    }
+    this.setState({
+      balance: Number(this.state.balance) + Number(this.state.amount),
+      transactionType: e.currentTarget.name,
+      amount: '',
+    });
+    this.setState(prevState => ({
+      income: Number(prevState.income) + Number(this.state.amount),
+    }));
+
+    this.saveTransaction(this.state.amount, this.state.transactionType);
+    console.log(this.state.transactionType);
+  };
+  saveTransaction = (amount, transactionType) => {
+    const transaction = {
+      id: shortId.generate(),
+      amount: amount,
+      date: new Date().toLocaleString(),
+      type: transactionType,
+    };
+    this.handleSubmit(transaction);
+  };
+  handleSubmit = transaction => {
+    this.setState(state => ({
+      transactions: [...this.state.transactions, transaction],
+    }));
   };
 
   render() {
+    const { amount, expenses, income, balance, transactions } = this.state;
     return (
       <div className="dashboard">
-        <Controls />
+        <Controls
+          amount={amount}
+          handleChange={this.handleChange}
+          onWithdraw={this.onWithdraw}
+          onDeposit={this.onDeposit}
+        />
 
-        <Balance />
+        <Balance balance={balance} income={income} expenses={expenses} />
 
-        <TransactionHistory />
+        <TransactionHistory transactions={transactions} />
       </div>
     );
   }

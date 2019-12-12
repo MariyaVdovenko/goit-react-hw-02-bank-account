@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styles from './Controls.module.css';
 
-const Controls = ({ props }) => (
-  <section className={styles.controls}>
-    <input type="number" name="amount" />
-    <button type="button">Deposit</button>
-    <button type="button">Withdraw</button>
-  </section>
-);
+export default class Controls extends Component {
+  static defaultProps = {};
 
-export default Controls;
+  static propTypes = {};
+
+  render() {
+    return (
+      <section className={styles.controls}>
+        <input
+          type="number"
+          name="amount"
+          value={this.props.amount}
+          onChange={this.props.handleChange}
+        />
+        <button type="button" name="Withdraw" onClick={this.props.onWithdraw}>
+          Withdraw
+        </button>
+        <button type="button" name="Deposit" onClick={this.props.onDeposit}>
+          Deposit
+        </button>
+      </section>
+    );
+  }
+}

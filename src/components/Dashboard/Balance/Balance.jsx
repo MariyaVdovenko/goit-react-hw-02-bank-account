@@ -1,22 +1,28 @@
 import React from 'react';
 import styles from './Balance.module.css';
 
-const Balance = ({ props }) => (
+const Balance = ({ balance, income, expenses }) => (
   <section className={styles.balance}>
     <span className={styles.balanceData}>
       <span role="img" aria-label="up">
         ⬆️
       </span>
-      2000$
+      {income}$
     </span>
     <span className={styles.balanceData}>
       <span role="img" aria-label="down">
         ⬇️
       </span>
-      1000$
+      {expenses}$
     </span>
-    <span className={styles.balanceData}>Balance: 5000$</span>
+    <span className={styles.balanceData}>Balance: {balance}$</span>
   </section>
 );
 
 export default Balance;
+
+/*
+balance - текущий баланс
+income - общая сумма доходов
+expenses - общая сумма расходов
+*/
