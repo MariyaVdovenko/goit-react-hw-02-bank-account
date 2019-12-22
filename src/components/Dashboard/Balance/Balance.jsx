@@ -20,9 +20,3 @@ const Balance = ({ balance, income, expenses }) => (
 );
 
 export default Balance;
-
-/*
-balance - текущий баланс
-income - общая сумма доходов
-expenses - общая сумма расходов
-*/
