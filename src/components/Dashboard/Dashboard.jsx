@@ -3,6 +3,10 @@ import Controls from './Controls/Controls';
 import Balance from './Balance/Balance';
 import TransactionHistory from './TransactionHistory/TransactionHistory';
 import shortId from 'shortid';
+import {
+  NotificationContainer,
+  NotificationManager,
+} from 'react-notifications';
 
 export default class Dashboard extends Component {
   static defaultProps = {};
@@ -40,11 +44,20 @@ export default class Dashboard extends Component {
   };
   onWithdraw = e => {
     if (this.state.amount <= 0) {
-      alert('Введите сумму для проведения операции!');
+      NotificationManager.error(
+        'Введите сумму для проведения операции!',
+        'Ошибка',
+        5000,
+      );
+
       return;
     }
     if (!this.isEnough()) {
-      alert('На счету недостаточно средств для проведения операции!');
+      NotificationManager.error(
+        'На счету недостаточно средств для проведения операции!',
+        'Ошибка',
+        5000,
+      );
       return;
     }
 
@@ -53,7 +66,12 @@ export default class Dashboard extends Component {
 
   onDeposit = e => {
     if (this.state.amount <= 0) {
-      alert('Введите сумму для проведения операции!');
+      NotificationManager.error(
+        'Введите сумму для проведения операции!',
+        'Ошибка',
+        5000,
+      );
+
       return;
     }
     this.addTransaction('deposit');
@@ -91,6 +109,7 @@ export default class Dashboard extends Component {
         <Balance balance={balance} income={deposit} expenses={withdraw} />
 
         <TransactionHistory transactions={transactions} />
+        <NotificationContainer />
       </div>
     );
   }

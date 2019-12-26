@@ -5,7 +5,7 @@ export default class Controls extends Component {
   static defaultProps = {};
 
   static propTypes = {};
-  0;
+
   render() {
     return (
       <section className={styles.controls}>
