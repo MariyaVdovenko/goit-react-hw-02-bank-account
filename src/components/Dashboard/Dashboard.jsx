@@ -7,6 +7,7 @@ import {
   NotificationContainer,
   NotificationManager,
 } from 'react-notifications';
+import { accountSummary, isEnough } from '../services/isEnough';
 
 export default class Dashboard extends Component {
   static defaultProps = {};
@@ -20,29 +21,10 @@ export default class Dashboard extends Component {
   handleChange = e => {
     this.setState({ amount: e.target.value });
   };
-  accountSummary = transactions => {
-    const summary = transactions.reduce(
-      (acc, t) => {
-        return {
-          ...acc,
-          [t.type]: t.amount + acc[t.type],
-        };
-      },
-      {
-        deposit: 0,
-        withdraw: 0,
-      },
-    );
-    return summary;
-  };
-  isEnough = () => {
-    const { deposit, withdraw } = this.accountSummary(this.state.transactions);
 
-    const balance = deposit - withdraw;
+  handleSubmit = e => {
+    const nameOperation = e.currentTarget.name;
 
-    return balance >= Number(this.state.amount);
-  };
-  onWithdraw = e => {
     if (this.state.amount <= 0) {
       NotificationManager.error(
         'Введите сумму для проведения операции!',
@@ -52,7 +34,10 @@ export default class Dashboard extends Component {
 
       return;
     }
-    if (!this.isEnough()) {
+    if (
+      nameOperation === 'withdraw' &&
+      !isEnough(this.state.transactions, this.state.amount)
+    ) {
       NotificationManager.error(
         'На счету недостаточно средств для проведения операции!',
         'Ошибка',
@@ -60,41 +45,30 @@ export default class Dashboard extends Component {
       );
       return;
     }
-
-    this.addTransaction('withdraw');
+    this.saveTransaction(`${nameOperation}`);
   };
 
-  onDeposit = e => {
-    if (this.state.amount <= 0) {
-      NotificationManager.error(
-        'Введите сумму для проведения операции!',
-        'Ошибка',
-        5000,
-      );
+  saveTransaction(transType) {
+    const transaction = {
+      id: shortId.generate(),
+      amount: Number(this.state.amount),
+      date: new Date().toLocaleString(),
+      type: transType,
+    };
 
-      return;
-    }
-    this.addTransaction('deposit');
-  };
+    this.addTransaction(transaction);
+  }
 
-  addTransaction(transType) {
+  addTransaction(transaction) {
     this.setState(prevState => ({
       amount: '',
-      transactions: [
-        ...prevState.transactions,
-        {
-          id: shortId.generate(),
-          amount: Number(prevState.amount),
-          date: new Date().toLocaleString(),
-          type: transType,
-        },
-      ],
+      transactions: [...prevState.transactions, transaction],
     }));
   }
 
   render() {
     const { amount, transactions } = this.state;
-    const { deposit, withdraw } = this.accountSummary(this.state.transactions);
+    const { deposit, withdraw } = accountSummary(this.state.transactions);
     const balance = deposit - withdraw;
 
     return (
@@ -102,8 +76,7 @@ export default class Dashboard extends Component {
         <Controls
           amount={amount}
           handleChange={this.handleChange}
-          onWithdraw={this.onWithdraw}
-          onDeposit={this.onDeposit}
+          handleSubmit={this.handleSubmit}
         />
 
         <Balance balance={balance} income={deposit} expenses={withdraw} />

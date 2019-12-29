@@ -15,11 +15,11 @@ export default class Controls extends Component {
           value={this.props.amount}
           onChange={this.props.handleChange}
         />
-        <button type="button" name="Withdraw" onClick={this.props.onWithdraw}>
-          Withdraw
-        </button>
-        <button type="button" name="Deposit" onClick={this.props.onDeposit}>
+        <button type="button" name="deposit" onClick={this.props.handleSubmit}>
           Deposit
+        </button>
+        <button type="button" name="withdraw" onClick={this.props.handleSubmit}>
+          Withdraw
         </button>
       </section>
     );
