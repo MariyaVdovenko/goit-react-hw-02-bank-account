@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './TransactionHistory.module.css';
+import T from 'prop-types';
 
 const TransactionHistory = ({ transactions }) => (
   <table className={styles.history}>
@@ -21,5 +22,16 @@ const TransactionHistory = ({ transactions }) => (
     </tbody>
   </table>
 );
+
+TransactionHistory.propTypes = {
+  transactions: T.arrayOf(
+    T.shape({
+      id: T.string.isRequired,
+      type: T.string,
+      amount: T.number,
+      date: T.string,
+    }),
+  ),
+};
 
 export default TransactionHistory;
